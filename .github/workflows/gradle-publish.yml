@@ -1,6 +1,8 @@
-# This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
+# Builds the library and publishes it.
+# - release created: publishes the tag version (e.g. 2.0.0) to GitHub Packages and Maven Central
+# - manual run: publishes the version from gradle.properties (usually a SNAPSHOT) to GitHub Packages only
 
-name: Gradle Package and Deploy to GitHub Packages
+name: Gradle Package and Publish
 
 on:
   workflow_dispatch:
@@ -8,12 +10,16 @@ on:
     types: [created]
 
 jobs:
-  build:
+  publish:
 
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+
+    env:
+      ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+      ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
     steps:
     - uses: actions/checkout@v4
@@ -25,11 +31,25 @@ jobs:
     - name: Set up Gradle
       uses: gradle/actions/setup-gradle@v4
 
-    - name: Build with Gradle
-      run: ./gradlew build
+    - name: Determine version
+      run: |
+        if [ "${{ github.event_name }}" = "release" ]; then
+          echo "VERSION_ARG=-Pversion=${{ github.event.release.tag_name }}" >> "$GITHUB_ENV"
+        fi
 
+    - name: Build with Gradle
+      run: ./gradlew build $VERSION_ARG
+
+    # GitHub Packages first: a failure here can be retried, while a Maven Central release is permanent
     - name: Publish to GitHub Packages
-      run: ./gradlew publish
+      run: ./gradlew publishAllPublicationsToGitHubPackagesRepository $VERSION_ARG
       env:
         GITHUB_ACTOR: ${{ github.actor }}
         GITHUB_TOKEN: ${{ github.token }}
+
+    - name: Publish to Maven Central
+      if: github.event_name == 'release'
+      run: ./gradlew publishAndReleaseToMavenCentral $VERSION_ARG
+      env:
+        ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+        ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}

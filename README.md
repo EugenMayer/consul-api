@@ -22,6 +22,75 @@ Dependencies:
 
 HTTP is handled by the JDK's built-in [HttpClient](https://openjdk.org/groups/net/httpclient/intro.html); there is no third-party HTTP library.
 
+Using the Library:
+------------------
+Releases are published to Maven Central, no extra repository or credentials needed.
+
+Gradle (Kotlin DSL):
+
+```kotlin
+dependencies {
+    implementation("io.github.eugenmayer:consul-api:2.0.0")
+}
+```
+
+Maven:
+
+```xml
+<dependency>
+  <groupId>io.github.eugenmayer</groupId>
+  <artifactId>consul-api</artifactId>
+  <version>2.0.0</version>
+</dependency>
+```
+
+Replace `2.0.0` with the latest release.
+
+### GitHub Packages (releases and snapshots)
+
+Releases and `-SNAPSHOT` builds are also published to [GitHub Packages](https://github.com/EugenMayer/consul-api/packages). GitHub Packages requires authentication for downloads, even for public packages: use a GitHub [personal access token (classic)](https://github.com/settings/tokens) with the `read:packages` scope (in GitHub Actions, the workflow's `GITHUB_TOKEN` works if it has `packages: read`).
+
+```kotlin
+repositories {
+    mavenCentral()
+    maven {
+        url = uri("https://maven.pkg.github.com/EugenMayer/consul-api")
+        credentials {
+            username = providers.gradleProperty("gpr.user").orNull ?: System.getenv("GITHUB_ACTOR")
+            password = providers.gradleProperty("gpr.key").orNull ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+}
+```
+
+Put `gpr.user` and `gpr.key` into `~/.gradle/gradle.properties` rather than into the project. For Maven, add the repository to your `pom.xml` and the credentials to `~/.m2/settings.xml` under the same `id`:
+
+```xml
+<repositories>
+  <repository>
+    <id>github-consul-api</id>
+    <url>https://maven.pkg.github.com/EugenMayer/consul-api</url>
+  </repository>
+</repositories>
+```
+
+```xml
+<!-- ~/.m2/settings.xml -->
+<servers>
+  <server>
+    <id>github-consul-api</id>
+    <username>YOUR_GITHUB_USER</username>
+    <password>YOUR_TOKEN</password>
+  </server>
+</servers>
+```
+
+### Releasing
+
+Create a GitHub release with the plain version as tag, e.g. `2.0.1` (no `v` prefix). The publish workflow builds and tests that version, then publishes it signed to GitHub Packages and Maven Central. Maven Central releases are permanent: a published version can't be changed or deleted. Running the publish workflow manually publishes the version from `gradle.properties` (usually a `-SNAPSHOT`) to GitHub Packages only.
+
+The workflow needs these repository secrets: `MAVEN_CENTRAL_USERNAME` and `MAVEN_CENTRAL_PASSWORD` (Central Portal user token), `SIGNING_KEY` (ASCII-armored private GPG key) and `SIGNING_KEY_PASSWORD`.
+
 Building and Testing:
 ---------------------
 The build uses the Gradle wrapper (Gradle 9.8.2) and a JDK 25. The integration tests start Consul via [Testcontainers](https://testcontainers.com/), so a running Docker daemon is required.
