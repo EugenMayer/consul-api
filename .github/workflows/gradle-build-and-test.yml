@@ -1,6 +1,6 @@
-# This workflow will build and test using Maven
+# This workflow will build and test using Gradle
 
-name: Maven Build and Test
+name: Gradle Build and Test
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
+      checks: write
 
     steps:
     - uses: actions/checkout@v4
@@ -20,10 +20,12 @@ jobs:
       with:
         java-version: '25'
         distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@v4
     - name: Build and Run Tests
-      run: ./mvnw test --batch-mode --fail-at-end
+      run: ./gradlew build --continue
     - name: Publish Test Report
       if: success() || failure()
       uses: scacap/action-surefire-report@v1
+      with:
+        report_paths: 'build/test-results/test/TEST-*.xml'
