@@ -1,4 +1,4 @@
-q# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
 
 name: Maven Package and Deploy to GitHub Packages
 
