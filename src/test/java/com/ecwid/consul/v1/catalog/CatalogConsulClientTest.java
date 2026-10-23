@@ -8,24 +8,22 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.ecwid.consul.ConsulTestConstants;
+import com.ecwid.consul.ConsulTestContainers;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.catalog.model.Node;
-import com.pszymczyk.consul.ConsulProcess;
-import com.pszymczyk.consul.ConsulStarterBuilder;
-import com.pszymczyk.consul.infrastructure.Ports;
+import org.testcontainers.consul.ConsulContainer;
 
 class CatalogConsulClientTest {
-	private ConsulProcess consul;
-	private int port = Ports.nextAvailable();
-	private CatalogConsulClient consulClient = new CatalogConsulClient(
-			new ConsulRawClient.Builder("localhost", port).build());
+	private ConsulContainer consul;
+	private CatalogConsulClient consulClient;
 
 	@BeforeEach
 	void setUp() {
-		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
-				.withHttpPort(port).withWaitTimeout(60).build().start();
+		consul = ConsulTestContainers.newConsulContainer();
+		consul.start();
+		consulClient = new CatalogConsulClient(
+				new ConsulRawClient.Builder(consul.getHost(), consul.getMappedPort(8500)).build());
 	}
 
 	@AfterEach

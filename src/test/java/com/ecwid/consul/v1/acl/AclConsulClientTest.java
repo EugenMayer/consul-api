@@ -15,7 +15,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.ecwid.consul.ConsulTestConstants;
+import com.ecwid.consul.ConsulTestContainers;
 import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.OperationException;
 import com.ecwid.consul.v1.Response;
@@ -23,17 +23,13 @@ import com.ecwid.consul.v1.acl.model.AclPolicy;
 import com.ecwid.consul.v1.acl.model.AclToken;
 import com.ecwid.consul.v1.acl.model.NewAcl;
 import com.ecwid.consul.v1.acl.model.UpdateAcl;
-import com.pszymczyk.consul.ConsulProcess;
-import com.pszymczyk.consul.ConsulStarterBuilder;
-import com.pszymczyk.consul.infrastructure.Ports;
+import org.testcontainers.consul.ConsulContainer;
 
 class AclConsulClientTest {
 	private static final String ACL_MASTER_TOKEN = "mastertoken";
-	private ConsulProcess consul;
-	private int port = Ports.nextAvailable();
-	private ConsulRawClient rawClient = new ConsulRawClient.Builder("localhost", port).setToken(ACL_MASTER_TOKEN)
-			.build();
-	private AclClient aclClient = new AclConsulClient(rawClient);
+	private ConsulContainer consul;
+	private ConsulRawClient rawClient;
+	private AclClient aclClient;
 
 	@BeforeEach
 	public void setup() {
@@ -41,8 +37,11 @@ class AclConsulClientTest {
 				+ "    \"enable_token_persistence\": true,\n" + "    \"tokens\": {\n"
 				+ "      \"initial_management\": \"" + ACL_MASTER_TOKEN + "\"\n" + "    }\n" + "  },\n"
 				+ "  \"primary_datacenter\": \"dc-test\",\n" + "  \"datacenter\": \"dc-test\"\n" + "}";
-		consul = ConsulStarterBuilder.consulStarter().withConsulVersion(ConsulTestConstants.CONSUL_VERSION)
-				.withHttpPort(port).withCustomConfig(customConfiguration).withWaitTimeout(90).build().start();
+		consul = ConsulTestContainers.newConsulContainer(customConfiguration);
+		consul.start();
+		rawClient = new ConsulRawClient.Builder(consul.getHost(), consul.getMappedPort(8500))
+				.setToken(ACL_MASTER_TOKEN).build();
+		aclClient = new AclConsulClient(rawClient);
 	}
 
 	@AfterEach
