@@ -110,18 +110,6 @@ public final class Utils {
 		return sb.toString();
 	}
 
-	/**
-	 * Converts the given duration in seconds to a seconds specifier for Consul.
-	 * 
-	 * @deprecated Use {@link #toConsulDuration(Duration)} instead.
-	 * @param waitTime The duration in seconds.
-	 * @return The time specifier as a string.
-	 */
-	@Deprecated(since = "2.0.0", forRemoval = true)
-	public static String toSecondsString(long waitTime) {
-		return String.valueOf(waitTime) + "s";
-	}
-
 	public static String assembleAgentAddress(String host, int port, String path) {
 		String agentPath = "";
 		if (path != null && !path.trim().isEmpty()) {

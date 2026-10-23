@@ -108,7 +108,7 @@ public final class Request {
 
 		public Builder addHeader(@NonNull String key, @NonNull String value) {
 			this.headers.put(key, value);
-			return null;
+			return this;
 		}
 
 		public Builder addHeaders(@NonNull Map<String, String> headers) {

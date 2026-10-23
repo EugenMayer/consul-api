@@ -10,7 +10,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import com.ecwid.consul.Utils;
-import com.ecwid.consul.transport.TLSConfig;
 import com.ecwid.consul.v1.acl.AclClient;
 import com.ecwid.consul.v1.acl.AclConsulClient;
 import com.ecwid.consul.v1.acl.AclTokensRequest;
@@ -142,20 +141,6 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	/**
 	 * Consul client will connect to local consul agent on 'http://localhost:8500'
 	 *
-	 * @param tlsConfig TLS configuration
-	 * @deprecated Use
-	 *             {@link ConsulRawClient.Builder#setSSLContext(javax.net.ssl.SSLContext)}
-	 *             and {@link #ConsulClient(ConsulRawClient)} or
-	 *             {@link #ConsulClient(SSLContext)} for TLS configuration
-	 */
-	@Deprecated(since = "2.0.0", forRemoval = true)
-	public ConsulClient(TLSConfig tlsConfig) {
-		this(new ConsulRawClient.Builder().setTlsConfig(tlsConfig).build());
-	}
-
-	/**
-	 * Consul client will connect to local consul agent on 'http://localhost:8500'
-	 *
 	 * @param sslCtx The {@link SSLContext} to use for TLS configuration.
 	 */
 	public ConsulClient(SSLContext sslCtx) {
@@ -171,23 +156,6 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 */
 	public ConsulClient(String agentHost) {
 		this(new ConsulRawClient.Builder().setHost(agentHost).build());
-	}
-
-	/**
-	 * Connect to consul agent on specific address and default port (8500)
-	 *
-	 * @param agentHost Hostname or IP address of consul agent. You can specify
-	 *                  scheme (HTTP/HTTPS) in address. If there is no scheme in
-	 *                  address - client will use HTTP.
-	 * @param tlsConfig TLS configuration
-	 * @deprecated Use
-	 *             {@link ConsulRawClient.Builder#setSSLContext(javax.net.ssl.SSLContext)}
-	 *             and {@link #ConsulClient(ConsulRawClient)} or
-	 *             {@link #ConsulClient(String, SSLContext)} for TLS configuration
-	 */
-	@Deprecated(since = "2.0.0", forRemoval = true)
-	public ConsulClient(String agentHost, TLSConfig tlsConfig) {
-		this(new ConsulRawClient.Builder().setHost(agentHost).setTlsConfig(tlsConfig).build());
 	}
 
 	/**
@@ -212,25 +180,6 @@ public class ConsulClient implements AclClient, AgentClient, CatalogClient, Coor
 	 */
 	public ConsulClient(String agentHost, int agentPort) {
 		this(new ConsulRawClient.Builder(agentHost, agentPort).build());
-	}
-
-	/**
-	 * Connect to consul agent on specific address and port
-	 *
-	 * @param agentHost Hostname or IP address of consul agent. You can specify
-	 *                  scheme (HTTP/HTTPS) in address. If there is no scheme in
-	 *                  address - client will use HTTP.
-	 * @param agentPort Consul agent port
-	 * @param tlsConfig TLS configuration
-	 * @deprecated Use
-	 *             {@link ConsulRawClient.Builder#setSSLContext(javax.net.ssl.SSLContext)}
-	 *             and {@link #ConsulClient(ConsulRawClient)} or
-	 *             {@link #ConsulClient(String, int, SSLContext)} for TLS
-	 *             configuration
-	 */
-	@Deprecated(since = "2.0.0", forRemoval = true)
-	public ConsulClient(String agentHost, int agentPort, TLSConfig tlsConfig) {
-		this(new ConsulRawClient.Builder(agentHost, agentPort).setTlsConfig(tlsConfig).build());
 	}
 
 	/**

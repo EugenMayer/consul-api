@@ -199,6 +199,27 @@ public class Filter implements QueryParameters {
 				&& positive == other.positive;
 	}
 
+	/**
+	 * Quotes a value as a filter string literal. Consul's filter parser accepts
+	 * {@code \\} but not {@code \"} inside double quotes, so values containing a
+	 * double quote are written as a raw string in backticks, which takes every
+	 * character literally.
+	 * 
+	 * @throws IllegalArgumentException If the value contains both a double quote
+	 *                                  and a backtick, which no filter string
+	 *                                  literal can express.
+	 */
+	private static String quote(@NonNull String value) {
+		if (value.indexOf('"') < 0) {
+			return "\"" + value.replace("\\", "\\\\") + "\"";
+		}
+		if (value.indexOf('`') < 0) {
+			return "`" + value + "`";
+		}
+		throw new IllegalArgumentException(
+				"Filter values cannot contain both a double quote and a backtick: " + value);
+	}
+
 	@Override
 	public final String toString() {
 		String prefix = positive ? "" : "not ";
@@ -206,9 +227,9 @@ public class Filter implements QueryParameters {
 			if (leaf.value != null) {
 				if ((leaf.matchingOperator == MatchingOperator.IN)
 						|| (leaf.matchingOperator == MatchingOperator.NOT_IN)) {
-					return prefix + "\"" + leaf.value + "\" " + leaf.matchingOperator + " " + leaf.selector;
+					return prefix + quote(leaf.value) + " " + leaf.matchingOperator + " " + leaf.selector;
 				}
-				return prefix + leaf.selector + " " + leaf.matchingOperator + " \"" + leaf.value + "\"";
+				return prefix + leaf.selector + " " + leaf.matchingOperator + " " + quote(leaf.value);
 			}
 			return prefix + leaf.selector + " " + leaf.matchingOperator;
 		}

@@ -12,7 +12,9 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +49,10 @@ import com.ecwid.consul.v1.Request;
  */
 abstract class AbstractHttpTransport implements HttpTransport {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHttpTransport.class);
+	/**
+	 * How long Consul holds a blocking query when no wait time is given.
+	 */
+	private static final Duration DEFAULT_BLOCKING_WAIT = Duration.ofMinutes(5);
 
 	/**
 	 * Makes a HTTP request to the given Consul Agent {@link URI} with the specified
@@ -70,13 +76,7 @@ abstract class AbstractHttpTransport implements HttpTransport {
 		// Grab the full URI that the HTTP client will make a request to
 		URI reqUri = buildURI(agentUri, request.getEndpoint(), allQueryParams);
 		HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(reqUri);
-		// Set the timeout on this request - dependent on the "wait" query parameter
-		if (allQueryParams.containsKey("wait")) {
-			// TODO This should be adjusted to the duration on the wait parameter + 1 second
-			reqBuilder.timeout(QueryParams.MAX_WAIT_TIME);
-		} else {
-			reqBuilder.timeout(ClientUtils.DEFAULT_REQUEST_TIMEOUT);
-		}
+		reqBuilder.timeout(requestTimeout(request, allQueryParams));
 		// Add HTTP headers to the request
 		HttpUtils.addHeadersToRequest(reqBuilder, request.getToken(), request.getHeaders());
 		// Specify the HTTP method and body
@@ -129,9 +129,36 @@ abstract class AbstractHttpTransport implements HttpTransport {
 		}
 	}
 
+	/**
+	 * Determines the HTTP timeout. Blocking queries (with an {@code index}) are
+	 * held by Consul for the requested {@code wait} (5 minutes if none is given)
+	 * plus up to wait/16 of jitter; the default request timeout is added on top as
+	 * margin for the network and the server.
+	 */
+	@NonNull
+	private static Duration requestTimeout(@NonNull Request request, @NonNull Map<String, String> allQueryParams) {
+		Duration wait = null;
+		for (QueryParameters params : request.getQueryParameters()) {
+			if (params instanceof QueryParams queryParams && queryParams.getWaitTime() != null) {
+				wait = queryParams.getWaitTime();
+			}
+		}
+		if (wait == null && allQueryParams.containsKey("wait")) {
+			// a raw wait parameter that we do not parse, assume the maximum
+			wait = QueryParams.MAX_WAIT_TIME;
+		}
+		if (wait == null && allQueryParams.containsKey("index")) {
+			wait = DEFAULT_BLOCKING_WAIT;
+		}
+		if (wait == null) {
+			return ClientUtils.DEFAULT_REQUEST_TIMEOUT;
+		}
+		return wait.plus(wait.dividedBy(16)).plus(ClientUtils.DEFAULT_REQUEST_TIMEOUT);
+	}
+
 	@NonNull
 	private Map<String, String> getAllQueryParameters(@NonNull Request request) {
-		Map<String, String> queryParams = new HashMap<>();
+		Map<String, String> queryParams = new LinkedHashMap<>();
 		// read the normal query parameters
 		for (QueryParameters params : request.getQueryParameters()) {
 			queryParams.putAll(params.getQueryParameters());
@@ -143,9 +170,15 @@ abstract class AbstractHttpTransport implements HttpTransport {
 
 	/**
 	 * Creates a full {@link URI} to the Consul API endpoint.
+	 * <p>
+	 * Each segment of the endpoint path (e.g. a KV key) and every query parameter
+	 * key and value is percent-encoded, so characters like {@code %}, {@code ?},
+	 * {@code #}, {@code +}, {@code &} and {@code =} reach Consul unchanged.
+	 * Parameters with a {@code null} value are sent as flags without {@code =}
+	 * (e.g. {@code ?recurse}).
 	 * 
 	 * @param agentUri    The {@link URI} to the Consul agent.
-	 * @param endpoint    The Consul API endpoint to use.
+	 * @param endpoint    The Consul API endpoint to use, not encoded.
 	 * @param queryParams The {@link Map} of key-value query parameters to include.
 	 * @return The {@link URI} to the Consul API endpoint including query
 	 *         parameters.
@@ -153,16 +186,33 @@ abstract class AbstractHttpTransport implements HttpTransport {
 	private URI buildURI(@NonNull URI agentUri, @NonNull String endpoint, @NonNull Map<String, String> queryParams) {
 		Objects.requireNonNull(agentUri, "agent URI cannot be null");
 		Objects.requireNonNull(endpoint, "API endpoint cannot be null");
+		StringBuilder uri = new StringBuilder();
+		uri.append(agentUri.getScheme()).append("://").append(agentUri.getRawAuthority());
+		if (agentUri.getRawPath() != null) {
+			uri.append(agentUri.getRawPath());
+		}
+		// split with limit -1 keeps empty segments, e.g. the trailing "/" of a KV prefix
+		uri.append(Arrays.stream(endpoint.split("/", -1)).map(AbstractHttpTransport::encode)
+				.collect(Collectors.joining("/")));
+		String query = queryParams.entrySet().stream()
+				.map(e -> e.getValue() == null ? encode(e.getKey()) : encode(e.getKey()) + "=" + encode(e.getValue()))
+				.collect(Collectors.joining("&"));
+		if (!query.isEmpty()) {
+			uri.append('?').append(query);
+		}
 		try {
-			URLEncoder.encode(endpoint, StandardCharsets.UTF_8);
-			String queryStr = queryParams.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue())
-					.collect(Collectors.joining("&"));
-			String query = !queryStr.isEmpty() ? queryStr : null;
-			return new URI(agentUri.getScheme(), agentUri.getUserInfo(), agentUri.getHost(), agentUri.getPort(),
-					agentUri.getPath() + endpoint, query, null);
+			return new URI(uri.toString());
 		} catch (URISyntaxException e) {
 			throw new ConsulException(e);
 		}
+	}
+
+	/**
+	 * Percent-encodes a path segment or query component (UTF-8, space as
+	 * {@code %20}).
+	 */
+	private static String encode(@NonNull String s) {
+		return URLEncoder.encode(s, StandardCharsets.UTF_8).replace("+", "%20");
 	}
 
 	private void logRequest(@NonNull HttpRequest request) {

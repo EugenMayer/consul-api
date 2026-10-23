@@ -8,11 +8,9 @@ Status:
 - Version `2.0.0-SNAPSHOT` (not yet released)
 - Requires **Java 25** or newer (compiled with `--release 25`)
 - Tested against **Consul 2.0.4** (default) and Consul 1.18.1
-- Known open issues (planned fixes):
-  - Error responses that are not JSON (e.g. `text/plain` bodies such as `rpc error making call: EOF`) are dropped, so `OperationException.getStatusContent()` is `null` for them
-  - Query parameter values are not URL-encoded, so `+`, `&` and `=` in values (e.g. in `filter` expressions) are not transmitted correctly
-  - `Filter` values are not escaped (`"` and `\` break the expression)
-  - `Request.Builder.addHeader` returns `null` instead of the builder
+- Known limitations (of Consul itself, not of this client):
+  - KV keys containing a percent-escape sequence such as `%20` cannot be written through Consul's HTTP API, Consul decodes the key path twice; a plain `%` works
+  - Filter values cannot contain both `"` and a backtick; `Filter` throws an `IllegalArgumentException` for those
 
 Dependencies:
 -------------
@@ -127,7 +125,9 @@ The API differs from the [Ecwid consul-api](https://github.com/Ecwid/consul-api)
 - Removed vulnerable dependencies (with open CVEs)
   - Apache HTTP Client 4.x, replaced with the JDK `HttpClient`
   - GSON, replaced with Jackson
-- Blocking queries are interruptible with `Thread.interrupt()`
+- Blocking queries are interruptible with `Thread.interrupt()` and use an HTTP timeout derived from the requested wait time
+- Error responses carry Consul's error text: `OperationException.getMessage()` and `getStatusContent()` contain e.g. `rpc error making call: EOF`
+- Query parameters and key paths are fully percent-encoded, so values with `+`, `&`, `=`, `?` or `#` work
 - Consul API deprecations and removals
   - Reworked ACL endpoints (the legacy ACL system was removed in Consul 1.11)
   - node-meta query specifier on [catalog](https://developer.hashicorp.com/consul/api-docs/catalog#node-meta) and [health](https://developer.hashicorp.com/consul/api-docs/health#node-meta-1) - deprecated since Consul 1.9
@@ -135,7 +135,7 @@ The API differs from the [Ecwid consul-api](https://github.com/Ecwid/consul-api)
   - The token is sent in the `X-Consul-Token` header; the `token` query parameter is [deprecated](https://developer.hashicorp.com/consul/api-docs/v1.13.x/api-structure) since Consul 1.13
 - Secure handling of sensitive data
   - Tokens and passwords are handled as `char[]`; `CharSequence` overloads exist for compatibility, but `char[]` is recommended
-  - Pass your own `SSLContext` and `SSLParameters` for TLS. `TlsConfig` is deprecated and will be removed because it is insecure (it disables server certificate verification)
+  - Pass your own `SSLContext` and `SSLParameters` for TLS. The former `TlsConfig` was removed because it disabled server certificate verification
 
 Credits:
 --------

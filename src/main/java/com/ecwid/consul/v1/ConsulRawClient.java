@@ -1,16 +1,10 @@
 package com.ecwid.consul.v1;
 
-import java.io.IOException;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -32,7 +26,6 @@ import com.ecwid.consul.transport.ConsulHttpResponse;
 import com.ecwid.consul.transport.DefaultHttpTransport;
 import com.ecwid.consul.transport.HttpMethod;
 import com.ecwid.consul.transport.HttpTransport;
-import com.ecwid.consul.transport.TLSConfig;
 
 /**
  * @author Vasily Vasilkov (vgv@ecwid.com)
@@ -94,28 +87,7 @@ public final class ConsulRawClient {
 			return this;
 		}
 
-		/**
-		 * Sets the {@link TLSConfig} option for the Consul client. This will be used to
-		 * automatically create the {@link SSLContext}.
-		 * 
-		 * @deprecated Use {@link #setSSLContext(SSLContext)} to pass SSL/TLS
-		 *             configuration instead.
-		 * 
-		 * @param tlsConfig The {@link TLSConfig} option for the Consul client
-		 * @return This {@link Builder} instance for method chaining.
-		 */
-		@Deprecated(since = "2.0.0", forRemoval = true)
-		public Builder setTlsConfig(TLSConfig tlsConfig) {
-			try {
-				this.sslCtx = ClientUtils.createSSLContext(tlsConfig);
-			} catch (UnrecoverableKeyException | KeyManagementException | KeyStoreException | NoSuchAlgorithmException
-					| CertificateException | IOException e) {
-				throw new ConsulException(e);
-			}
-			return this;
-		}
-
-		public Builder setSSLContext(SSLContext sslCtx) {
+			public Builder setSSLContext(SSLContext sslCtx) {
 			this.sslCtx = sslCtx;
 			return this;
 		}

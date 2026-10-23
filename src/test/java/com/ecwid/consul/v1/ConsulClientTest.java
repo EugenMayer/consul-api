@@ -1,9 +1,15 @@
 package com.ecwid.consul.v1;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.KeyStore;
 import java.util.Map;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.jupiter.api.AfterEach;
@@ -13,7 +19,7 @@ import org.testcontainers.consul.ConsulContainer;
 import org.testcontainers.utility.MountableFile;
 
 import com.ecwid.consul.ConsulTestContainers;
-import com.ecwid.consul.transport.TLSConfig;
+import com.ecwid.consul.transport.TransportException;
 import com.ecwid.consul.v1.agent.model.NewService;
 import com.ecwid.consul.v1.agent.model.Service;
 
@@ -52,21 +58,37 @@ class ConsulClientTest {
 		serviceRegisterTest(consulClient);
 	}
 
-	@SuppressWarnings("removal")
+	/**
+	 * Creates an {@link SSLContext} that trusts the test CA, which signed the
+	 * certificate Consul serves (valid for localhost).
+	 */
+	private static SSLContext trustTestCa() throws Exception {
+		KeyStore trustStore = KeyStore.getInstance("JKS");
+		try (InputStream in = new FileInputStream("src/test/resources/ssl/trustStore.jks")) {
+			trustStore.load(in, "change_me".toCharArray());
+		}
+		TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+		tmf.init(trustStore);
+		SSLContext sslContext = SSLContext.getInstance("TLS");
+		sslContext.init(null, tmf.getTrustManagers(), null);
+		return sslContext;
+	}
+
 	@Test
-	void agentHttpsTest() {
+	void agentHttpsTest() throws Exception {
 		String host = "https://" + consul.getHost();
 		int httpsPort = consul.getMappedPort(HTTPS_PORT);
-		String path = "src/test/resources/ssl";
-		String certRootPath = new File(path).getAbsolutePath().replace('\\', '/');
-		String certificatePath = certRootPath + "/trustStore.jks";
-		char[] certificatePassword = "change_me".toCharArray();
-		String keyStorePath = certRootPath + "/keyStore.jks";
-		char[] keyStorePassword = "change_me".toCharArray();
-		TLSConfig tlsConfig = new TLSConfig(TLSConfig.KeyStoreInstanceType.JKS, certificatePath, certificatePassword,
-				keyStorePath, keyStorePassword);
-		ConsulClient consulClient = new ConsulClient(host, httpsPort, tlsConfig);
+		ConsulClient consulClient = new ConsulClient(host, httpsPort, trustTestCa());
 		serviceRegisterTest(consulClient);
+	}
+
+	@Test
+	void agentHttpsRejectsUntrustedCertificate() throws Exception {
+		// the default trust store does not know the test CA
+		String host = "https://" + consul.getHost();
+		int httpsPort = consul.getMappedPort(HTTPS_PORT);
+		ConsulClient consulClient = new ConsulClient(host, httpsPort, SSLContext.getDefault());
+		assertThrows(TransportException.class, consulClient::getAgentServices);
 	}
 
 	private void serviceRegisterTest(ConsulClient consulClient) {

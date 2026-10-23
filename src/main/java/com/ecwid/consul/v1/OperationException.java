@@ -18,9 +18,18 @@ public final class OperationException extends ConsulException {
 	private final transient JsonNode statusContent;
 
 	public OperationException(int statusCode, @Nullable JsonNode statusContent) {
-		super("Consul operation exception; HTTP Status: " + statusCode);
+		super(message(statusCode, statusContent));
 		this.statusCode = statusCode;
 		this.statusContent = statusContent;
+	}
+
+	private static String message(int statusCode, @Nullable JsonNode statusContent) {
+		String message = "Consul operation exception; HTTP Status: " + statusCode;
+		if (statusContent == null) {
+			return message;
+		}
+		// text error bodies as plain text, JSON bodies as JSON
+		return message + "; " + (statusContent.isTextual() ? statusContent.asText() : statusContent.toString());
 	}
 
 	public OperationException(@NonNull ConsulHttpResponse httpResponse) {

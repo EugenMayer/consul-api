@@ -2,6 +2,7 @@ package com.ecwid.consul.v1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -155,6 +156,24 @@ class FilterTest {
 		final Filter subject = Filter.of(Filter.MatchingOperator.EQUAL, Selector.of("foo"), "bar");
 		final Map<String, String> actual = subject.getQueryParameters();
 		assertEquals(Collections.singletonMap("filter", "foo = \"bar\""), actual);
+	}
+
+	@Test
+	void backslashesInValuesAreEscaped() {
+		assertFilter("foo = \"C:\\\\temp\"", Filter.of(Filter.MatchingOperator.EQUAL, Selector.of("foo"), "C:\\temp"));
+	}
+
+	@Test
+	void valuesWithDoubleQuotesUseRawStrings() {
+		assertFilter("foo = `say \"hi\" C:\\temp`",
+				Filter.of(Filter.MatchingOperator.EQUAL, Selector.of("foo"), "say \"hi\" C:\\temp"));
+		assertFilter("`a\"b` in Service.Tags", Filter.in("a\"b", Selector.of("Service.Tags")));
+	}
+
+	@Test
+	void valuesWithDoubleQuoteAndBacktickAreRejected() {
+		Filter filter = Filter.of(Filter.MatchingOperator.EQUAL, Selector.of("foo"), "a\"b`c");
+		assertThrows(IllegalArgumentException.class, filter::toString);
 	}
 
 	private void assertFilter(String expected, Filter subject) {

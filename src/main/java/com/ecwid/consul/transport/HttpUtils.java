@@ -12,28 +12,22 @@ package com.ecwid.consul.transport;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ecwid.consul.ConsulException;
-import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.json.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 
 /**
  * Provides various HTTP related utility functions.
@@ -46,29 +40,6 @@ final class HttpUtils {
 
 	private HttpUtils() {
 		// static utility class
-	}
-
-	/**
-	 * Creates a full {@link URI} to the Consul API endpoint.
-	 * 
-	 * @param agentUri    The {@link URI} to the Consul agent.
-	 * @param endpoint    The Consul API endpoint to use.
-	 * @param queryParams The query parameters to include.
-	 * @return The {@link URI} to the Consul API endpoint including query
-	 *         parameters.
-	 */
-	static URI buildURI(@NonNull URI agentUri, @NonNull String endpoint, QueryParameters... queryParams) {
-		Objects.requireNonNull(endpoint, "endpoint cannot be null");
-		try {
-			URLEncoder.encode(endpoint, StandardCharsets.UTF_8);
-			String queryStr = Arrays.stream(queryParams).flatMap(e -> e.getQueryParameters().entrySet().stream())
-					.map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining("&"));
-			String query = !queryStr.isEmpty() ? queryStr : null;
-			return new URI(agentUri.getScheme(), agentUri.getUserInfo(), agentUri.getHost(), agentUri.getPort(),
-					agentUri.getPath() + endpoint, query, null);
-		} catch (URISyntaxException e) {
-			throw new ConsulException(e);
-		}
 	}
 
 	/**
@@ -141,7 +112,23 @@ final class HttpUtils {
 	}
 
 	/**
+	 * Determines if the given Content-Type header denotes JSON, ignoring
+	 * parameters such as {@code charset}.
+	 */
+	private static boolean isJson(@Nullable String contentType) {
+		if (contentType == null) {
+			return false;
+		}
+		int paramStart = contentType.indexOf(';');
+		String mediaType = paramStart >= 0 ? contentType.substring(0, paramStart) : contentType;
+		return "application/json".equalsIgnoreCase(mediaType.trim());
+	}
+
+	/**
 	 * Parses the given {@link HttpResponse} into a {@link ConsulHttpResponse}.
+	 * The body is always fully read and closed, so the connection can be reused.
+	 * JSON bodies are parsed; other non-empty bodies (Consul sends errors as
+	 * {@code text/plain}) are kept as a text node.
 	 * 
 	 * @param response The {@link HttpResponse} to parse.
 	 * @return The parsed {@link ConsulHttpResponse}.
@@ -159,14 +146,17 @@ final class HttpUtils {
 		// Headers for Blocking Queries
 		Long consulIndex = parseUnsignedLong(headers, "X-Consul-Index");
 		String contentType = headers.firstValue("Content-Type").orElse(null);
-		if ("application/json".equals(contentType)) {
-			try (InputStream is = response.body()) {
-				JsonNode content = JsonUtil.toJsonNode(is);
-				return new ConsulHttpResponse(statusCode, content, consulEffectiveConsistency, consulKnownLeader,
-						consulLastContact, consulIndex);
-			}
+		byte[] body;
+		try (InputStream is = response.body()) {
+			body = is.readAllBytes();
 		}
-		return new ConsulHttpResponse(statusCode, null, consulEffectiveConsistency, consulKnownLeader,
+		JsonNode content = null;
+		if (isJson(contentType)) {
+			content = JsonUtil.toJsonNode(body);
+		} else if (body.length > 0) {
+			content = TextNode.valueOf(new String(body, StandardCharsets.UTF_8).strip());
+		}
+		return new ConsulHttpResponse(statusCode, content, consulEffectiveConsistency, consulKnownLeader,
 				consulLastContact, consulIndex);
 	}
 }

@@ -3,7 +3,6 @@ package com.ecwid.consul.v1.event.model;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.ecwid.consul.Utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -96,18 +95,6 @@ public class Event {
 
 	public void setlTime(int lTime) {
 		this.lTime = lTime;
-	}
-
-	/**
-	 * Generates a wait index that matches the behavior of Consul's index
-	 * generation.
-	 * 
-	 * @deprecated Use {@link Utils#getWaitIndex(UUID)} with this Event ID.
-	 * @return The Consul wait index to use.
-	 */
-	@Deprecated(since = "2.0.0", forRemoval = true)
-	public long getWaitIndex() {
-		return Utils.getWaitIndex(id);
 	}
 
 	@Override
