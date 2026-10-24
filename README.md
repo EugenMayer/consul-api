@@ -7,7 +7,7 @@ Status:
 -------
 - Version `2.0.0-SNAPSHOT` (not yet released)
 - Requires **Java 25** or newer (compiled with `--release 25`)
-- Tested against **Consul 2.0.4** (default) and Consul 1.18.1
+- Tested against **Consul 2.1.0** (default), 2.0.4 and 1.18.1
 - Known limitations (of Consul itself, not of this client):
   - KV keys containing a percent-escape sequence such as `%20` cannot be written through Consul's HTTP API, Consul decodes the key path twice; a plain `%` works
   - Filter values cannot contain both `"` and a backtick; `Filter` throws an `IllegalArgumentException` for those
@@ -94,7 +94,7 @@ Building and Testing:
 The build uses the Gradle wrapper (Gradle 9.8.2) and a JDK 25. The integration tests start Consul via [Testcontainers](https://testcontainers.com/), so a running Docker daemon is required.
 
 ```bash
-# all tests against the default Consul version (2.0.4)
+# all tests against the default Consul version (2.1.0)
 ./gradlew test
 
 # against another Consul release (any hashicorp/consul image tag)

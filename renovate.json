@@ -11,6 +11,17 @@
         "#\\s*renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)(\\s+registryUrl=(?<registryUrl>\\S+))?(\\s+versioning=(?<versioning>\\S+))?\\s*\\n[A-Za-z0-9_.-]+=(?<currentValue>\\S+)"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}maven{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "description": "Default Consul test version for IDE runs, kept in sync with consulVersion in gradle.properties",
+      "managerFilePatterns": ["/(^|/)ConsulTestConstants\\.java$/"],
+      "matchStrings": [
+        "System\\.getProperty\\(\"consul\\.version\",\\s*\"(?<currentValue>[^\"]+)\"\\)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "hashicorp/consul",
+      "versioningTemplate": "docker"
     }
   ],
   "packageRules": [
