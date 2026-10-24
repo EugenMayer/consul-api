@@ -16,6 +16,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
+ * The configuration of a service mesh proxy.
+ *
  * 
  * 
  * @author Jon Huang
@@ -85,6 +87,30 @@ public class ProxyFields {
 
 	public void setLocalServicePort(int localServicePort) {
 		this.localServicePort = localServicePort;
+	}
+
+	public String getLocalServiceSocketPath() {
+		return localServiceSocketPath;
+	}
+
+	public void setLocalServiceSocketPath(String localServiceSocketPath) {
+		this.localServiceSocketPath = localServiceSocketPath;
+	}
+
+	public ProxyMode getMode() {
+		return mode;
+	}
+
+	public void setMode(ProxyMode mode) {
+		this.mode = mode;
+	}
+
+	public ObjectNode getTransparentProxy() {
+		return transparentProxy;
+	}
+
+	public void setTransparentProxy(ObjectNode transparentProxy) {
+		this.transparentProxy = transparentProxy;
 	}
 
 	public ObjectNode getConfig() {

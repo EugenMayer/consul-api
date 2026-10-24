@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * An ACL policy with its rules.
+ *
  * @author Jon Huang (jon5477)
  */
 @JsonInclude(Include.NON_NULL)
@@ -110,10 +112,9 @@ public final class AclPolicy {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AclPolicy)) {
+		if (!(obj instanceof AclPolicy other)) {
 			return false;
 		}
-		AclPolicy other = (AclPolicy) obj;
 		return Objects.equals(createIndex, other.createIndex) && Objects.equals(datacenter, other.datacenter)
 				&& Objects.equals(description, other.description) && Objects.equals(hash, other.hash)
 				&& Objects.equals(id, other.id) && Objects.equals(modifyIndex, other.modifyIndex)

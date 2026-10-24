@@ -8,6 +8,8 @@ import com.ecwid.consul.v1.health.model.Check;
 import com.ecwid.consul.v1.health.model.HealthService;
 
 /**
+ * Client for the <a href="https://developer.hashicorp.com/consul/api-docs/health">health</a> endpoints: checks by node, service and state, and healthy service instances.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public interface HealthClient {

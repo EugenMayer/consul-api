@@ -12,6 +12,8 @@ import com.ecwid.consul.QueryParameters;
 import com.ecwid.consul.Utils;
 
 /**
+ * Common query parameters of read requests: datacenter, consistency mode, blocking query index and wait time, and near.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class QueryParams implements QueryParameters {
@@ -170,10 +172,9 @@ public final class QueryParams implements QueryParameters {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof QueryParams)) {
+		if (!(o instanceof QueryParams that)) {
 			return false;
 		}
-		QueryParams that = (QueryParams) o;
 		return Objects.equals(waitTime, that.waitTime) && index == that.index
 				&& Objects.equals(datacenter, that.datacenter) && consistencyMode == that.consistencyMode
 				&& Objects.equals(near, that.near);

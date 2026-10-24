@@ -10,6 +10,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A KV entry with its value as Base64 text; see {@link #getDecodedValue()}.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class GetValue {
@@ -114,10 +116,9 @@ public class GetValue {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof GetValue)) {
+		if (!(obj instanceof GetValue other)) {
 			return false;
 		}
-		GetValue other = (GetValue) obj;
 		return createIndex == other.createIndex && flags == other.flags && Objects.equals(key, other.key)
 				&& Objects.equals(lockIndex, other.lockIndex) && modifyIndex == other.modifyIndex
 				&& Objects.equals(session, other.session) && Objects.equals(value, other.value);

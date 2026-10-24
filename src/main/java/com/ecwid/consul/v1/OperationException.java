@@ -8,6 +8,8 @@ import com.ecwid.consul.transport.ConsulHttpResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
+ * Thrown when Consul answers a request with an HTTP error status; carries the status code and Consul's error body.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Jon Huang (jon5477)
  *
@@ -43,10 +45,5 @@ public final class OperationException extends ConsulException {
 	@Nullable
 	public final JsonNode getStatusContent() {
 		return statusContent;
-	}
-
-	@Override
-	public final String toString() {
-		return "OperationException [statusCode=" + statusCode + ", statusContent=" + statusContent + "]";
 	}
 }

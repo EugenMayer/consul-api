@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A node identity attached to an ACL token or role.
+ *
  * @author Jon Huang (jon5477)
  */
 @JsonInclude(Include.NON_NULL)
@@ -50,10 +52,9 @@ public final class AclNodeIdentity {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AclNodeIdentity)) {
+		if (!(obj instanceof AclNodeIdentity other)) {
 			return false;
 		}
-		AclNodeIdentity other = (AclNodeIdentity) obj;
 		return Objects.equals(datacenter, other.datacenter) && Objects.equals(nodeName, other.nodeName);
 	}
 

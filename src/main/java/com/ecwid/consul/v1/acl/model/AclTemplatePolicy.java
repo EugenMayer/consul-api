@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A templated policy attached to an ACL token or role.
+ *
  * @author Jon Huang (jon5477)
  */
 @JsonInclude(Include.NON_NULL)
@@ -67,10 +69,9 @@ public final class AclTemplatePolicy {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AclTemplatePolicy)) {
+		if (!(obj instanceof AclTemplatePolicy other)) {
 			return false;
 		}
-		AclTemplatePolicy other = (AclTemplatePolicy) obj;
 		return Objects.equals(templateID, other.templateID) && Objects.equals(templateName, other.templateName)
 				&& Objects.equals(templateVariables, other.templateVariables);
 	}

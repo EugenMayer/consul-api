@@ -13,6 +13,8 @@ import com.ecwid.consul.v1.coordinate.model.Node;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
+ * Default {@link CoordinateClient} implementation.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CoordinateConsulClient implements CoordinateClient {

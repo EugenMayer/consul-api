@@ -13,6 +13,8 @@ package com.ecwid.consul.v1.agent.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * The type of an upstream destination: a service or a prepared query.
+ *
  * 
  * 
  * @author Jon Huang

@@ -84,10 +84,9 @@ public final class CatalogServicesRequest implements QueryParameters {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof CatalogServicesRequest)) {
+		if (!(o instanceof CatalogServicesRequest that)) {
 			return false;
 		}
-		CatalogServicesRequest that = (CatalogServicesRequest) o;
 		return Objects.equals(datacenter, that.datacenter) && Objects.equals(nodeMeta, that.nodeMeta)
 				&& Objects.equals(queryParams, that.queryParams);
 	}

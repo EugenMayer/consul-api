@@ -6,6 +6,8 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A node in the catalog together with its services.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CatalogNode {

@@ -9,6 +9,8 @@ import com.ecwid.consul.TimedOutException;
 import com.ecwid.consul.v1.Request;
 
 /**
+ * Sends {@link com.ecwid.consul.v1.Request}s to a Consul agent over HTTP.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Jon Huang (jon5477)
  */

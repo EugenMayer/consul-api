@@ -6,6 +6,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A service identity of an ACL role.
+ *
  * 
  * 
  * @author Jon Huang
@@ -51,10 +53,9 @@ public final class ServiceIdentity {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof ServiceIdentity)) {
+		if (!(obj instanceof ServiceIdentity other)) {
 			return false;
 		}
-		ServiceIdentity other = (ServiceIdentity) obj;
 		return Objects.equals(datacenters, other.datacenters) && Objects.equals(serviceName, other.serviceName);
 	}
 

@@ -7,6 +7,8 @@ import java.util.Objects;
 import com.ecwid.consul.QueryParameters;
 
 /**
+ * Options for writing a KV entry: flags, check-and-set index and session locks.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class PutParams implements QueryParameters {
@@ -70,10 +72,9 @@ public class PutParams implements QueryParameters {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof PutParams)) {
+		if (!(o instanceof PutParams putParams)) {
 			return false;
 		}
-		PutParams putParams = (PutParams) o;
 		return flags == putParams.flags && Objects.equals(cas, putParams.cas)
 				&& Objects.equals(acquireSession, putParams.acquireSession)
 				&& Objects.equals(releaseSession, putParams.releaseSession);

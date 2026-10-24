@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * The fields of an existing ACL token to update.
+ *
  * @author Jon Huang (jon5477)
  */
 @JsonInclude(Include.NON_NULL)
@@ -115,10 +117,9 @@ public final class UpdateAcl {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof UpdateAcl)) {
+		if (!(obj instanceof UpdateAcl other)) {
 			return false;
 		}
-		UpdateAcl other = (UpdateAcl) obj;
 		return Objects.equals(accessorId, other.accessorId) && Objects.equals(description, other.description)
 				&& Objects.equals(expirationTime, other.expirationTime) && local == other.local
 				&& Objects.equals(nodeIdentities, other.nodeIdentities) && Objects.equals(policies, other.policies)

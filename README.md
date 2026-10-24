@@ -111,10 +111,16 @@ The build uses the Gradle wrapper (Gradle 9.8.2) and a JDK 25. The integration t
 ./gradlew publishToMavenLocal
 ```
 
-All library, plugin and test versions are kept in `gradle.properties`. To see which of them have newer releases:
+All library, plugin and test versions are kept in `gradle.properties`. [Renovate](https://docs.renovatebot.com/) opens update PRs every Monday evening via the `Renovate` workflow (`.github/workflows/renovate.yml`, configured in `renovate.json`; each version in `gradle.properties` carries a `# renovate:` comment for that). To check for newer releases locally:
 
 ```bash
 ./gradlew dependencyUpdates
+```
+
+The HTTPS integration test uses a test CA and a certificate for `localhost` in `src/test/resources/ssl` (valid until 2036). To regenerate them (requires `openssl` and `keytool`):
+
+```bash
+./scripts/generate-test-certs.sh
 ```
 
 Migrating from Ecwid consul-api:

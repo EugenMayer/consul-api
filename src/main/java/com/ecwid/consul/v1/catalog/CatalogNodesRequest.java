@@ -103,10 +103,9 @@ public final class CatalogNodesRequest implements QueryParameters {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof CatalogNodesRequest)) {
+		if (!(o instanceof CatalogNodesRequest that)) {
 			return false;
 		}
-		CatalogNodesRequest that = (CatalogNodesRequest) o;
 		return Objects.equals(datacenter, that.datacenter) && Objects.equals(near, that.near)
 				&& Objects.equals(nodeMeta, that.nodeMeta) && Objects.equals(queryParams, that.queryParams);
 	}

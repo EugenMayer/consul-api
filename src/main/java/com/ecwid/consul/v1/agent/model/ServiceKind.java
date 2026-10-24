@@ -13,6 +13,8 @@ package com.ecwid.consul.v1.agent.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * The kind of a service, e.g. a typical service or a proxy or gateway.
+ *
  * 
  * 
  * @author Jon Huang

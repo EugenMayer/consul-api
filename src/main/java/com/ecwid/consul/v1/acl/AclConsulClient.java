@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
+ * Default {@link AclClient} implementation.
+ *
  * @author Jon Huang (jon5477)
  */
 public final class AclConsulClient implements AclClient {

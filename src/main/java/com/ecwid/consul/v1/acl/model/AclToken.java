@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * An ACL token as returned by Consul.
+ *
  * @author Jon Huang (jon5477)
  */
 @JsonInclude(Include.NON_NULL)
@@ -176,10 +178,9 @@ public final class AclToken {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AclToken)) {
+		if (!(obj instanceof AclToken other)) {
 			return false;
 		}
-		AclToken other = (AclToken) obj;
 		return Objects.equals(accessorId, other.accessorId)
 				&& Objects.equals(agentACLDefaultPolicy, other.agentACLDefaultPolicy)
 				&& Objects.equals(agentACLDownPolicy, other.agentACLDownPolicy) && createIndex == other.createIndex

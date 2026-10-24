@@ -5,6 +5,8 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A member of the cluster as seen by the local agent's gossip pool.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Member {

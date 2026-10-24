@@ -5,6 +5,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A session to create.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class NewSession {

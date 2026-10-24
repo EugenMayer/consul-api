@@ -109,10 +109,9 @@ public final class EventListRequest implements QueryParameters {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof EventListRequest)) {
+		if (!(o instanceof EventListRequest that)) {
 			return false;
 		}
-		EventListRequest that = (EventListRequest) o;
 		return Objects.equals(name, that.name) && Objects.equals(node, that.node)
 				&& Objects.equals(service, that.service) && Objects.equals(tag, that.tag)
 				&& Objects.equals(queryParams, that.queryParams);

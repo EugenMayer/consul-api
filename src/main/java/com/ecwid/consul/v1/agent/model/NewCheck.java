@@ -6,6 +6,8 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A health check to register on the local agent.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Jon Huang
  */

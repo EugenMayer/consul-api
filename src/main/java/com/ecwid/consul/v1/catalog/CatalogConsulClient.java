@@ -21,6 +21,8 @@ import com.ecwid.consul.v1.catalog.model.Node;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
+ * Default {@link CatalogClient} implementation.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class CatalogConsulClient implements CatalogClient {

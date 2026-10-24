@@ -3,6 +3,8 @@ package com.ecwid.consul.v1.coordinate.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * The network coordinate of a node.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Node {

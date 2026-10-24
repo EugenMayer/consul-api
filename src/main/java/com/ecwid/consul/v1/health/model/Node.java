@@ -104,10 +104,9 @@ public final class Node {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof Node)) {
+		if (!(obj instanceof Node other)) {
 			return false;
 		}
-		Node other = (Node) obj;
 		return Objects.equals(address, other.address) && Objects.equals(createIndex, other.createIndex)
 				&& Objects.equals(datacenter, other.datacenter) && Objects.equals(id, other.id)
 				&& Objects.equals(meta, other.meta) && Objects.equals(modifyIndex, other.modifyIndex)

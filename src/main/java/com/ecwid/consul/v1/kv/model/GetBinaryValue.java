@@ -5,6 +5,8 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A KV entry with its value as raw bytes.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class GetBinaryValue {

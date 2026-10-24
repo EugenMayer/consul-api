@@ -56,7 +56,7 @@ public class Filter implements QueryParameters {
 
 		@Override
 		public final int hashCode() {
-			return Objects.hash(s);
+			return Objects.hashCode(s);
 		}
 
 		@Override
@@ -64,10 +64,9 @@ public class Filter implements QueryParameters {
 			if (this == obj) {
 				return true;
 			}
-			if (!(obj instanceof Selector)) {
+			if (!(obj instanceof Selector other)) {
 				return false;
 			}
-			Selector other = (Selector) obj;
 			return Objects.equals(s, other.s);
 		}
 	}
@@ -191,10 +190,9 @@ public class Filter implements QueryParameters {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof Filter)) {
+		if (!(obj instanceof Filter other)) {
 			return false;
 		}
-		Filter other = (Filter) obj;
 		return boolOp == other.boolOp && Objects.equals(children, other.children) && Objects.equals(leaf, other.leaf)
 				&& positive == other.positive;
 	}
@@ -276,10 +274,9 @@ public class Filter implements QueryParameters {
 			if (this == obj) {
 				return true;
 			}
-			if (!(obj instanceof Leaf)) {
+			if (!(obj instanceof Leaf other)) {
 				return false;
 			}
-			Leaf other = (Leaf) obj;
 			return matchingOperator == other.matchingOperator && Objects.equals(selector, other.selector)
 					&& Objects.equals(value, other.value);
 		}

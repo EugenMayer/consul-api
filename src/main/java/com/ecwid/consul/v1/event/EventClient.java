@@ -8,6 +8,8 @@ import com.ecwid.consul.v1.event.model.Event;
 import com.ecwid.consul.v1.event.model.EventParams;
 
 /**
+ * Client for the <a href="https://developer.hashicorp.com/consul/api-docs/event">user event</a> endpoints.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public interface EventClient {

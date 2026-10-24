@@ -116,10 +116,9 @@ public class Service {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof Service)) {
+		if (!(obj instanceof Service other)) {
 			return false;
 		}
-		Service other = (Service) obj;
 		return Objects.equals(address, other.address) && Objects.equals(createIndex, other.createIndex)
 				&& Objects.equals(enableTagOverride, other.enableTagOverride) && Objects.equals(id, other.id)
 				&& Objects.equals(meta, other.meta) && Objects.equals(modifyIndex, other.modifyIndex)

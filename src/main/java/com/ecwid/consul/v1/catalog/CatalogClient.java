@@ -12,6 +12,8 @@ import com.ecwid.consul.v1.catalog.model.CatalogService;
 import com.ecwid.consul.v1.catalog.model.Node;
 
 /**
+ * Client for the <a href="https://developer.hashicorp.com/consul/api-docs/catalog">catalog</a> endpoints: nodes, services and datacenters.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public interface CatalogClient {

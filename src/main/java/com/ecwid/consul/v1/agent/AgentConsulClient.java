@@ -23,6 +23,8 @@ import com.ecwid.consul.v1.agent.model.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
+ * Default {@link AgentClient} implementation.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class AgentConsulClient implements AgentClient {

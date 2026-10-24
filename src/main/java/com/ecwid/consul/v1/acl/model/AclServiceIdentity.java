@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A service identity attached to an ACL token or role.
+ *
  * @author Jon Huang (jon5477)
  */
 @JsonInclude(Include.NON_NULL)
@@ -51,10 +53,9 @@ public final class AclServiceIdentity {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AclServiceIdentity)) {
+		if (!(obj instanceof AclServiceIdentity other)) {
 			return false;
 		}
-		AclServiceIdentity other = (AclServiceIdentity) obj;
 		return Objects.equals(datacenters, other.datacenters) && Objects.equals(serviceName, other.serviceName);
 	}
 

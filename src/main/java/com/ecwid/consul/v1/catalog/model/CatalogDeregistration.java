@@ -3,6 +3,8 @@ package com.ecwid.consul.v1.catalog.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * An entry to remove from the catalog: a node, service or check.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CatalogDeregistration {

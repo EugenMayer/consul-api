@@ -45,6 +45,7 @@ public final class Utils {
 	 * @return {@code true} if both {@link CharSequence}s are equal, {@code false}
 	 *         otherwise
 	 */
+	@SuppressWarnings("ReferenceEquality") // same instance or both null, the content check follows
 	public static boolean charSequenceEquals(@Nullable CharSequence cs1, @Nullable CharSequence cs2) {
 		if (cs1 == cs2) {
 			return true;

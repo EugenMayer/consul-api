@@ -28,6 +28,8 @@ import com.ecwid.consul.transport.HttpMethod;
 import com.ecwid.consul.transport.HttpTransport;
 
 /**
+ * Low-level client that sends HTTP requests to a Consul agent; the endpoint clients build on it.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Jon Huang (jon5477)
  */
@@ -154,8 +156,7 @@ public final class ConsulRawClient {
 	 * 
 	 * @return The Consul API token that is set on the client.
 	 */
-	@Nullable
-	public final char[] getToken() {
+	public final char @Nullable [] getToken() {
 		char[] arr = this.token.get();
 		if (arr != null) {
 			return Arrays.copyOf(arr, arr.length); // defensive copy

@@ -131,10 +131,9 @@ public final class HealthServicesRequest implements QueryParameters {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof HealthServicesRequest)) {
+		if (!(obj instanceof HealthServicesRequest other)) {
 			return false;
 		}
-		HealthServicesRequest other = (HealthServicesRequest) obj;
 		return cached == other.cached && Objects.equals(datacenter, other.datacenter)
 				&& Objects.equals(filter, other.filter) && Objects.equals(near, other.near) && passing == other.passing
 				&& Objects.equals(queryParams, other.queryParams);

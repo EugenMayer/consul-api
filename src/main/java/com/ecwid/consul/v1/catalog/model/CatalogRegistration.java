@@ -7,6 +7,8 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * An entry to register in the catalog directly: a node with an optional service and check.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CatalogRegistration {

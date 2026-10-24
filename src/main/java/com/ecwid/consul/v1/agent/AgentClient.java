@@ -12,6 +12,8 @@ import com.ecwid.consul.v1.agent.model.Self;
 import com.ecwid.consul.v1.agent.model.Service;
 
 /**
+ * Client for the <a href="https://developer.hashicorp.com/consul/api-docs/agent">agent</a> endpoints: local services, checks, members and maintenance.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public interface AgentClient {

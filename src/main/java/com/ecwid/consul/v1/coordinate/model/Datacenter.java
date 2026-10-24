@@ -5,6 +5,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * The network coordinates of the servers in a datacenter.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Datacenter {

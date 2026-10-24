@@ -5,6 +5,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A health check registered on the local agent.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Check {

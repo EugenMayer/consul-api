@@ -13,6 +13,8 @@ package com.ecwid.consul.v1.agent.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A sidecar proxy registration of a service.
+ *
  * 
  * 
  * @author Jon Huang
@@ -45,6 +47,14 @@ public class Proxy {
 
 	public void setFields(ProxyFields fields) {
 		this.fields = fields;
+	}
+
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
 	}
 
 	public Integer getPort() {

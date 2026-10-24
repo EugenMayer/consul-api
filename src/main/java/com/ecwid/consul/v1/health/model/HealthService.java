@@ -6,6 +6,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A service instance with its node and health checks.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class HealthService {
@@ -52,10 +54,9 @@ public class HealthService {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof HealthService)) {
+		if (!(obj instanceof HealthService other)) {
 			return false;
 		}
-		HealthService other = (HealthService) obj;
 		return Objects.equals(checks, other.checks) && Objects.equals(node, other.node)
 				&& Objects.equals(service, other.service);
 	}

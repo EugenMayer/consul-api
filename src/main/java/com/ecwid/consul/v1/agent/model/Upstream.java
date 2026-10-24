@@ -14,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
+ * An upstream that a service mesh proxy routes to.
+ *
  * 
  * 
  * @author Jon Huang

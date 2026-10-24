@@ -7,6 +7,8 @@ import java.util.Objects;
 import com.ecwid.consul.QueryParameters;
 
 /**
+ * Filters that restrict which nodes receive a fired user event.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class EventParams implements QueryParameters {
@@ -70,10 +72,9 @@ public class EventParams implements QueryParameters {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof EventParams)) {
+		if (!(o instanceof EventParams that)) {
 			return false;
 		}
-		EventParams that = (EventParams) o;
 		return Objects.equals(name, that.name) && Objects.equals(service, that.service) && Objects.equals(tag, that.tag)
 				&& Objects.equals(node, that.node);
 	}

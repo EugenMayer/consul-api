@@ -17,6 +17,8 @@ import com.ecwid.consul.v1.health.model.HealthService;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
+ * Default {@link HealthClient} implementation.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class HealthConsulClient implements HealthClient {

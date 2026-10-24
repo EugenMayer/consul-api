@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * A single query parameter; a {@code null} value is sent as a flag without value.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Jon Huang (jon5477)
  *
@@ -37,10 +39,9 @@ public final class SingleQueryParameters implements QueryParameters {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof SingleQueryParameters)) {
+		if (!(obj instanceof SingleQueryParameters other)) {
 			return false;
 		}
-		SingleQueryParameters other = (SingleQueryParameters) obj;
 		return Objects.equals(key, other.key) && Objects.equals(value, other.value);
 	}
 

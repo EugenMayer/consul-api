@@ -8,6 +8,8 @@ import com.ecwid.consul.Utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A service to register on the local agent, optionally with health checks.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  * @author Spencer Gibb (spencer@gibb.us)
  * @author Jon Huang

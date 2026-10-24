@@ -56,16 +56,21 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.withType<Javadoc>().configureEach {
     options.encoding = "UTF-8"
+    // check links, HTML and tags, but do not require a comment on every getter and setter
+    (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:all,-missing", true)
 }
 
 tasks.test {
     useJUnitPlatform()
-    jvmArgs("-javaagent:${mockitoAgent.asPath}")
+    // resolved when the task runs, which the configuration cache requires
+    val agent: FileCollection = mockitoAgent
+    jvmArgumentProviders.add(CommandLineArgumentProvider { listOf("-javaagent:${agent.singleFile}") })
     systemProperty("consul.version", versionOf("consulVersion"))
 }
 
 // only suggest stable releases in ./gradlew dependencyUpdates
 tasks.withType<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask>().configureEach {
+    notCompatibleWithConfigurationCache("the versions plugin does not support the configuration cache")
     rejectVersionIf {
         Regex("(?i).*[.-](alpha|beta|rc|cr|m|milestone|preview|snapshot)[.\\d-]*").matches(candidate.version)
     }

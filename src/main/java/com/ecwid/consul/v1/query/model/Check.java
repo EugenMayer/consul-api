@@ -5,6 +5,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A health check in the result of a prepared query.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Check {

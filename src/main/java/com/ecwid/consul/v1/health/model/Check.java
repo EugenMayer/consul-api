@@ -6,6 +6,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A health check as reported by the health endpoints.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Check {
@@ -149,10 +151,9 @@ public class Check {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof Check)) {
+		if (!(obj instanceof Check other)) {
 			return false;
 		}
-		Check other = (Check) obj;
 		return Objects.equals(checkId, other.checkId) && Objects.equals(createIndex, other.createIndex)
 				&& Objects.equals(modifyIndex, other.modifyIndex) && Objects.equals(name, other.name)
 				&& Objects.equals(node, other.node) && Objects.equals(notes, other.notes)

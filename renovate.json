@@ -1,0 +1,30 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "labels": ["dependencies"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Versions in gradle.properties, annotated with '# renovate: datasource=... depName=...'",
+      "managerFilePatterns": ["/(^|/)gradle\\.properties$/"],
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)(\\s+registryUrl=(?<registryUrl>\\S+))?(\\s+versioning=(?<versioning>\\S+))?\\s*\\n[A-Za-z0-9_.-]+=(?<currentValue>\\S+)"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}maven{{/if}}"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Bundle minor and patch updates of libraries, plugins and actions into one weekly PR",
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "non-major dependencies",
+      "groupSlug": "non-major"
+    },
+    {
+      "description": "A new Consul version changes what the integration tests run against, keep it separate",
+      "matchPackageNames": ["hashicorp/consul"],
+      "groupName": "consul test version",
+      "groupSlug": "consul"
+    }
+  ]
+}

@@ -13,6 +13,8 @@ package com.ecwid.consul.v1.agent.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * The status of an agent health check.
+ *
  * @author Jon Huang
  */
 public enum CheckStatus {

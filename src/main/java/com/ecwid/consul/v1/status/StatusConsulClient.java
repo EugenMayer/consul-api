@@ -13,6 +13,8 @@ import com.ecwid.consul.v1.Response;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
+ * Default {@link StatusClient} implementation.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class StatusConsulClient implements StatusClient {

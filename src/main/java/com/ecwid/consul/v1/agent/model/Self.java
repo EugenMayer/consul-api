@@ -5,6 +5,8 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * The configuration and member information of the local agent.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Self {

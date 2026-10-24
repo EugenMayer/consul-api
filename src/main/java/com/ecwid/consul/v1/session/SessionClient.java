@@ -8,6 +8,8 @@ import com.ecwid.consul.v1.session.model.NewSession;
 import com.ecwid.consul.v1.session.model.Session;
 
 /**
+ * Client for the <a href="https://developer.hashicorp.com/consul/api-docs/session">session</a> endpoints, the basis of KV locks.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public interface SessionClient {

@@ -5,6 +5,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A network coordinate, used to estimate round trip times between nodes.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Coord {

@@ -18,6 +18,8 @@ import com.ecwid.consul.v1.session.model.Session;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
+ * Default {@link SessionClient} implementation.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public final class SessionConsulClient implements SessionClient {

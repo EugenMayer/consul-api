@@ -6,6 +6,8 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A user event fired in the cluster.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Event {
@@ -107,10 +109,9 @@ public class Event {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof Event)) {
+		if (!(obj instanceof Event other)) {
 			return false;
 		}
-		Event other = (Event) obj;
 		return Objects.equals(id, other.id) && lTime == other.lTime && Objects.equals(name, other.name)
 				&& Objects.equals(nodeFilter, other.nodeFilter) && Objects.equals(payload, other.payload)
 				&& Objects.equals(serviceFilter, other.serviceFilter) && Objects.equals(tagFilter, other.tagFilter)

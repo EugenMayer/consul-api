@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * An ACL role with its policies and service identities.
+ *
  * @author Jon Huang (jon5477)
  */
 @JsonInclude(Include.NON_NULL)
@@ -111,10 +113,9 @@ public final class AclRole {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AclRole)) {
+		if (!(obj instanceof AclRole other)) {
 			return false;
 		}
-		AclRole other = (AclRole) obj;
 		return Objects.equals(createIndex, other.createIndex) && Objects.equals(description, other.description)
 				&& Objects.equals(hash, other.hash) && Objects.equals(id, other.id)
 				&& Objects.equals(modifyIndex, other.modifyIndex) && Objects.equals(name, other.name)

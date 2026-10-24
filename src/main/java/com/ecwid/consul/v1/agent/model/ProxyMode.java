@@ -13,6 +13,8 @@ package com.ecwid.consul.v1.agent.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * How a service mesh proxy intercepts traffic.
+ *
  * 
  * 
  * @author Jon Huang

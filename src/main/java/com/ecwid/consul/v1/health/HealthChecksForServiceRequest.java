@@ -96,10 +96,9 @@ public final class HealthChecksForServiceRequest implements QueryParameters {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof HealthChecksForServiceRequest)) {
+		if (!(o instanceof HealthChecksForServiceRequest that)) {
 			return false;
 		}
-		HealthChecksForServiceRequest that = (HealthChecksForServiceRequest) o;
 		return Objects.equals(datacenter, that.datacenter) && Objects.equals(near, that.near)
 				&& Objects.equals(nodeMeta, that.nodeMeta) && Objects.equals(queryParams, that.queryParams);
 	}

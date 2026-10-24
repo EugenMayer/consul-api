@@ -7,6 +7,8 @@ import java.util.Objects;
 import com.ecwid.consul.QueryParameters;
 
 /**
+ * Filters for listing ACL tokens.
+ *
  * @author Jon Huang (jon5477)
  */
 public class AclTokensRequest implements QueryParameters {
@@ -110,10 +112,9 @@ public class AclTokensRequest implements QueryParameters {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AclTokensRequest)) {
+		if (!(obj instanceof AclTokensRequest other)) {
 			return false;
 		}
-		AclTokensRequest other = (AclTokensRequest) obj;
 		return Objects.equals(authMethod, other.authMethod) && Objects.equals(authMethodNs, other.authMethodNs)
 				&& Objects.equals(ns, other.ns) && Objects.equals(policy, other.policy)
 				&& Objects.equals(role, other.role) && Objects.equals(serviceName, other.serviceName);

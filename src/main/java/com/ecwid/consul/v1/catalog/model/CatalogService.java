@@ -7,6 +7,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A service instance in the catalog together with its node.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class CatalogService {
@@ -187,10 +189,9 @@ public class CatalogService {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof CatalogService)) {
+		if (!(obj instanceof CatalogService other)) {
 			return false;
 		}
-		CatalogService other = (CatalogService) obj;
 		return Objects.equals(address, other.address) && Objects.equals(createIndex, other.createIndex)
 				&& Objects.equals(datacenter, other.datacenter) && Objects.equals(id, other.id)
 				&& Objects.equals(modifyIndex, other.modifyIndex) && Objects.equals(node, other.node)

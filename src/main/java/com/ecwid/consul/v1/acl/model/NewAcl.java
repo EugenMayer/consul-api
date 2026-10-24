@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * The fields of an ACL token to create.
+ *
  * @author Jon Huang (jon5477)
  */
 @JsonInclude(Include.NON_NULL)
@@ -135,10 +137,9 @@ public final class NewAcl {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof NewAcl)) {
+		if (!(obj instanceof NewAcl other)) {
 			return false;
 		}
-		NewAcl other = (NewAcl) obj;
 		return Objects.equals(accessorId, other.accessorId) && Objects.equals(description, other.description)
 				&& Objects.equals(expirationTime, other.expirationTime)
 				&& Objects.equals(expirationTtl, other.expirationTtl) && local == other.local

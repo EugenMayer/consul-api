@@ -5,6 +5,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * A session as returned by Consul.
+ *
  * @author Vasily Vasilkov (vgv@ecwid.com)
  */
 public class Session {
